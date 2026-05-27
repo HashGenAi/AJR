@@ -1,3 +1,4 @@
-https://ajrajr.pages.dev/* https://www.jiorockers.online/:splat 301
+/ /index.html 200
+/* /404.html 404
 
 /:year/:month/:slug.html /:slug 301
