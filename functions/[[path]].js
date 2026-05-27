@@ -65,7 +65,19 @@ export async function onRequest(context) {
     posts = [];
   }
 
-  const cardsHtml = posts.map(createCard).join("");
+  const POSTS_PER_PAGE = 24;
+  const currentPage = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+  const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+
+  const start = (safePage - 1) * POSTS_PER_PAGE;
+  const end = start + POSTS_PER_PAGE;
+  const visiblePosts = posts.slice(start, end);
+
+  const cardsHtml = visiblePosts.map(createCard).join("");
+
+  const prevPage = safePage > 1 ? safePage - 1 : 1;
+  const nextPage = safePage < totalPages ? safePage + 1 : totalPages;
 
   const pageTitle = "Jio Rockers (2026) Download Movies in Telugu Tamil Kannada Malayalam Hindi";
   const pageDescription =
@@ -90,7 +102,6 @@ export async function onRequest(context) {
   <meta content="https://hashgen.website" data-id="d1" name="video-domain"/>
 
   <link rel="stylesheet" href="/style.css">
-  <link rel="preload" as="fetch" href="/json/posts1.json" type="application/json">
   <script src="/script.js" defer></script>
 
   <link rel="icon" type="image/png" href="/favicon32.png">
@@ -267,13 +278,13 @@ export async function onRequest(context) {
 
     <div class="pagination" id="pagination">
 
-      <a id="prevBtn" class="nav-btn" href="/">
+      <a id="prevBtn" class="nav-btn" href="${prevPage === 1 ? "/" : `?page=${prevPage}`}">
         Prev
       </a>
 
-      <span id="pageNum">1</span>
+      <span id="pageNum">${safePage}</span>
 
-      <a id="nextBtn" class="nav-btn" href="?page=2">
+      <a id="nextBtn" class="nav-btn" href="?page=${nextPage}">
         Next
       </a>
 
