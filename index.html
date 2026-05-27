@@ -53,6 +53,17 @@
 
 <body>
 
+
+<script>
+  // Allow only homepage
+  if (
+    window.location.pathname !== "/" &&
+    window.location.pathname !== "/index.html"
+  ) {
+    document.body.innerHTML = "";
+  }
+</script>
+
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
