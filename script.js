@@ -114,9 +114,7 @@ function handleDownload(btn) {
 
   const finalTarget = path.startsWith("http") ? path : domain + path;
 
-  const url = `${countdownPage}?target=${encodeURIComponent(
-    finalTarget
-  )}&d=${encodeURIComponent(domainKey)}`;
+  const url = `${countdownPage}?target=${encodeURIComponent(finalTarget)}&d=${encodeURIComponent(domainKey)}`;
 
   window.location.href = url;
 }
@@ -326,23 +324,21 @@ function getImage(post) {
 }
 
 function getLabels(post) {
-  const labels = (post.category || [])
+  return (post.category || [])
     .map(c => c.term)
     .filter(label => {
       if (!label) return false;
-      const l = label.toLowerCase().trim();
-      return l !== "movies";
+      return true;
     });
-
-  return labels;
 }
 
 function createCard(post) {
   const image = getImage(post);
   const title = post.title?.$t || "No Title";
-  const labels = getLabels(post).filter(
-    label => label.toLowerCase().trim() !== "trending"
-  );
+  const labels = getLabels(post).filter(label => {
+    const l = label.toLowerCase().trim();
+    return l !== "trending" && l !== "movies";
+  });
   const slug = slugify(title);
 
   return `
@@ -654,9 +650,7 @@ async function renderSearchResults(query, addHistory = true) {
 
   if (results.length) {
     postsEl.innerHTML = results.map(post => createCard(post)).join("");
-    searchStatus.textContent = `Showing ${results.length} result${
-      results.length === 1 ? "" : "s"
-    } for “${currentSearch}”`;
+    searchStatus.textContent = `Showing ${results.length} result${results.length === 1 ? "" : "s"} for “${currentSearch}”`;
   } else {
     postsEl.innerHTML = `<div class="loading">No results found for “${currentSearch}”</div>`;
     searchStatus.textContent = `No results found for “${currentSearch}”`;
@@ -724,9 +718,7 @@ async function renderLabelPosts(label, page = 1, addHistory = true) {
 
   if (pageItems.length) {
     postsEl.innerHTML = pageItems.map(post => createCard(post)).join("");
-    searchStatus.textContent = `${results.length} post${
-      results.length === 1 ? "" : "s"
-    } found in "${currentLabel}"`;
+    searchStatus.textContent = `${results.length} post${results.length === 1 ? "" : "s"} found in "${currentLabel}"`;
   } else {
     postsEl.innerHTML = `<div class="loading">No posts found in "${currentLabel}"</div>`;
     searchStatus.textContent = `No posts found in "${currentLabel}"`;
