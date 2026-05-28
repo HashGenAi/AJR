@@ -486,15 +486,16 @@ body.sidebar-open{
   margin:0 auto;
 }
 
-@media(max-width:1300px){
-  .grid{
-    grid-template-columns:repeat(5,1fr);
-  }
-}
-
 @media(max-width:1050px){
   .grid{
     grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:768px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
   }
 }
 
@@ -515,7 +516,7 @@ body.sidebar-open{
 
 @media(max-width:480px){
   .grid{
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:10px;
   }
 
