@@ -13,17 +13,13 @@ const fallbackPoster =
 
 const domainMap = {};
 
-function readDomains(){
-
+function readDomains() {
   document
     .querySelectorAll('meta[name="video-domain"]')
     .forEach(meta => {
-
       const id = meta.dataset.id;
-
-      if(id){
-        domainMap[id] =
-          meta.content || "";
+      if (id) {
+        domainMap[id] = meta.content || "";
       }
     });
 }
@@ -32,67 +28,48 @@ function readDomains(){
    VIDEO POSTER
 ========================= */
 
-function setPoster(root = document){
-
+function setPoster(root = document) {
   root
     .querySelectorAll(".video-wrapper")
     .forEach(wrapper => {
-
-      const posterBox =
-        wrapper.querySelector(".video-poster");
-
-      if(!posterBox) return;
-
-      if(posterBox.dataset.ready) return;
+      const posterBox = wrapper.querySelector(".video-poster");
+      if (!posterBox) return;
+      if (posterBox.dataset.ready) return;
 
       posterBox.dataset.ready = "1";
 
-      let poster =
-        wrapper.dataset.poster;
+      let poster = wrapper.dataset.poster;
 
-      if(!poster){
-
-        const firstPostImage =
-          document.querySelector(
-            "#detailContent img"
-          );
-
-        if(firstPostImage){
-
-          poster =
-            firstPostImage.currentSrc
-            ||
-            firstPostImage.src;
+      if (!poster) {
+        const firstPostImage = document.querySelector("#detailContent img");
+        if (firstPostImage) {
+          poster = firstPostImage.currentSrc || firstPostImage.src;
         }
       }
 
-      if(poster){
-        poster =
-          poster.replace(
-            /\/s\d+(-c)?\//,
-            "/s1600/"
-          );
+      if (poster) {
+        poster = poster.replace(/\/s\d+(-c)?\//, "/s1600/");
       }
 
-      if(!poster){
+      if (!poster) {
         poster = fallbackPoster;
       }
 
       posterBox.innerHTML = `
-      <img
-        src="${poster}"
-        alt=""
-        draggable="false"
-        loading="eager"
-        decoding="async"
-        style="
-          width:100%;
-          height:100%;
-          object-fit:cover;
-          display:block;
-        "
-      >
-    `;
+        <img
+          src="${poster}"
+          alt=""
+          draggable="false"
+          loading="eager"
+          decoding="async"
+          style="
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block;
+          "
+        >
+      `;
     });
 }
 
@@ -100,42 +77,27 @@ function setPoster(root = document){
    PLAY VIDEO
 ========================= */
 
-window.playVideo = function(el){
+window.playVideo = function (el) {
+  const wrapper = el.closest(".video-wrapper");
+  if (!wrapper) return;
 
-  const wrapper =
-    el.closest(".video-wrapper");
+  const iframe = wrapper.querySelector(".video-player");
+  const poster = wrapper.querySelector(".video-poster");
 
-  if(!wrapper) return;
-
-  const iframe =
-    wrapper.querySelector(".video-player");
-
-  const poster =
-    wrapper.querySelector(".video-poster");
-
-  if(!iframe) return;
+  if (!iframe) return;
 
   el.style.display = "none";
 
-  if(poster){
+  if (poster) {
     poster.style.display = "none";
   }
 
-  if(!iframe.src){
+  if (!iframe.src) {
+    const domainId = wrapper.dataset.domainId || "";
+    const domain = domainMap[domainId] || "";
+    const path = iframe.dataset.src || "";
 
-    const domainId =
-      wrapper.dataset.domainId || "";
-
-    const domain =
-      domainMap[domainId] || "";
-
-    const path =
-      iframe.dataset.src || "";
-
-    iframe.src =
-      path.startsWith("http")
-        ? path
-        : domain + path;
+    iframe.src = path.startsWith("http") ? path : domain + path;
   }
 };
 
@@ -143,26 +105,18 @@ window.playVideo = function(el){
    DOWNLOAD BUTTON
 ========================= */
 
-function handleDownload(btn){
+function handleDownload(btn) {
+  const raw = btn.dataset.url || "";
+  if (!raw) return;
 
-  const raw =
-    btn.dataset.url || "";
+  const [path = "", domainKey = ""] = raw.split("|");
+  const domain = domainMap[domainKey] || "";
 
-  if(!raw) return;
+  const finalTarget = path.startsWith("http") ? path : domain + path;
 
-  const [path = "", domainKey = ""] =
-    raw.split("|");
-
-  const domain =
-    domainMap[domainKey] || "";
-
-  const finalTarget =
-    path.startsWith("http")
-      ? path
-      : domain + path;
-
-  const url =
-    `${countdownPage}?target=${encodeURIComponent(finalTarget)}&d=${encodeURIComponent(domainKey)}`;
+  const url = `${countdownPage}?target=${encodeURIComponent(
+    finalTarget
+  )}&d=${encodeURIComponent(domainKey)}`;
 
   window.location.href = url;
 }
@@ -177,67 +131,42 @@ let popupImg = null;
 let currentImages = [];
 let currentIndex = 0;
 
-function loadPopup(){
-
-  popup =
-    document.getElementById("tmdbPopup");
-
-  popupImg =
-    document.getElementById("tmdbPopupImg");
+function loadPopup() {
+  popup = document.getElementById("tmdbPopup");
+  popupImg = document.getElementById("tmdbPopupImg");
 }
 
-function refreshGallery(){
-
-  currentImages = Array.from(
-    document.querySelectorAll(
-      ".tmdb-extra-images img"
-    )
-  );
+function refreshGallery() {
+  currentImages = Array.from(document.querySelectorAll(".tmdb-extra-images img"));
 }
 
 /* =========================
    UPDATE POPUP IMAGE
 ========================= */
 
-function updatePopupImage(){
+function updatePopupImage() {
+  if (!popupImg || !currentImages.length) return;
 
-  if(
-    !popupImg ||
-    !currentImages.length
-  ) return;
-
-  const img =
-    currentImages[currentIndex];
+  const img = currentImages[currentIndex];
 
   let src =
-    img.getAttribute("data-src")
-    ||
-    img.getAttribute("data-lazy-src")
-    ||
-    img.currentSrc
-    ||
-    img.src
-    ||
-    img.getAttribute("src")
-    ||
+    img.getAttribute("data-src") ||
+    img.getAttribute("data-lazy-src") ||
+    img.currentSrc ||
+    img.src ||
+    img.getAttribute("src") ||
     "";
 
-  src = src.replace(
-    /\/s\d+(-c)?\//,
-    "/s1600/"
-  );
+  src = src.replace(/\/s\d+(-c)?\//, "/s1600/");
 
   popupImg.style.opacity = "0";
 
   const preload = new Image();
 
   preload.onload = () => {
-
-    popupImg.src =
-      preload.src;
+    popupImg.src = preload.src;
 
     requestAnimationFrame(() => {
-
       popupImg.style.opacity = "1";
     });
   };
@@ -245,61 +174,39 @@ function updatePopupImage(){
   preload.src = src;
 }
 
-function openPopup(index){
-
+function openPopup(index) {
   loadPopup();
 
-  if(
-    !popup ||
-    !popupImg
-  ) return;
+  if (!popup || !popupImg) return;
 
   currentIndex = index;
-
   popup.classList.add("active");
-
   updatePopupImage();
 
   history.pushState(
-    { popupOpen:true },
+    { popupOpen: true },
     "",
     window.location.href
   );
 }
 
-function closePopup(){
-
-  if(!popup) return;
-
+function closePopup() {
+  if (!popup) return;
   popup.classList.remove("active");
 }
 
-function nextImage(){
+function nextImage() {
+  if (!currentImages.length) return;
 
-  if(!currentImages.length) return;
-
-  currentIndex =
-    (
-      currentIndex + 1
-    )
-    %
-    currentImages.length;
-
+  currentIndex = (currentIndex + 1) % currentImages.length;
   updatePopupImage();
 }
 
-function prevImage(){
-
-  if(!currentImages.length) return;
+function prevImage() {
+  if (!currentImages.length) return;
 
   currentIndex =
-    (
-      currentIndex - 1
-      +
-      currentImages.length
-    )
-    %
-    currentImages.length;
+    (currentIndex - 1 + currentImages.length) % currentImages.length;
 
   updatePopupImage();
 }
@@ -336,102 +243,106 @@ let currentLabel = "";
 let currentLabelTotalPages = 1;
 let searchTimer = null;
 
-function scrollToTopNow(){
+function scrollToTopNow() {
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
   window.scrollTo({
     top: 0,
     left: 0,
-    behavior: "auto"
+    behavior: "auto",
   });
 }
 
-function setPageTitleVisible(visible){
-  if(pageTitleEl){
+function setPageTitleVisible(visible) {
+  if (pageTitleEl) {
     pageTitleEl.style.display = visible ? "block" : "none";
   }
 }
 
-function setBrandTitleVisible(visible){
-  if(brandTitle){
+function setBrandTitleVisible(visible) {
+  if (brandTitle) {
     brandTitle.style.display = visible ? "block" : "none";
   }
 }
 
-function setLanguageCloudVisible(visible){
-  if(languageCloud){
+function setLanguageCloudVisible(visible) {
+  if (languageCloud) {
     languageCloud.style.display = visible ? "flex" : "none";
   }
 }
 
-function updateFeaturedVisibility(){
-  if(!featuredSection) return;
+function updateFeaturedVisibility() {
+  if (!featuredSection) return;
 
-  const shouldShow =
-    !currentSearch &&
-    !currentLabel &&
-    currentPage === 1;
+  const params = new URLSearchParams(window.location.search);
+  const page = parseInt(params.get("page") || "1", 10);
+  const search = params.get("search");
+  const label = params.get("label");
 
-  featuredSection.style.display =
-    shouldShow ? "block" : "none";
+  const isHomepage = !search && !label && page === 1;
+
+  featuredSection.style.display = isHomepage ? "block" : "none";
 }
 
-function openSidebar(){
+function openSidebar() {
   sidebar.classList.add("active");
   sidebarOverlay.classList.add("active");
   document.body.classList.add("sidebar-open");
 }
 
-function closeSidebar(){
+function closeSidebar() {
   sidebar.classList.remove("active");
   sidebarOverlay.classList.remove("active");
   document.body.classList.remove("sidebar-open");
 }
 
-function toggleSidebar(){
-  if(sidebar.classList.contains("active")){
+function toggleSidebar() {
+  if (sidebar.classList.contains("active")) {
     closeSidebar();
-  }else{
+  } else {
     openSidebar();
   }
 }
 
-function slugify(text){
-  return text.toString().toLowerCase().trim()
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/(^-|-$)/g,'');
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
-function getJsonFile(index){
+function getJsonFile(index) {
   return `json/posts${index}.json`;
 }
 
-function getImage(post){
+function getImage(post) {
   return (
-    post.media$thumbnail?.url?.replace("/s72-c/","/s1200/")
-    ||
-    post.content?.$t?.match(/<img.*?src="(.*?)"/i)?.[1]
-    ||
+    post.media$thumbnail?.url?.replace("/s72-c/", "/s1200/") ||
+    post.content?.$t?.match(/<img.*?src="(.*?)"/i)?.[1] ||
     "https://via.placeholder.com/500x750?text=No+Image"
   );
 }
 
-function getLabels(post){
+function getLabels(post) {
   const labels = (post.category || [])
     .map(c => c.term)
     .filter(label => {
-      if(!label) return false;
+      if (!label) return false;
       const l = label.toLowerCase().trim();
-      return l !== "movies" && l !== "trending";
+      return l !== "movies";
     });
 
   return labels;
 }
 
-function createCard(post){
+function createCard(post) {
   const image = getImage(post);
   const title = post.title?.$t || "No Title";
-  const labels = getLabels(post);
+  const labels = getLabels(post).filter(
+    label => label.toLowerCase().trim() !== "trending"
+  );
   const slug = slugify(title);
 
   return `
@@ -444,42 +355,47 @@ function createCard(post){
         <div class="title">${title}</div>
 
         <div class="labels">
-          ${labels.slice(0,6).map(label => `
-            <span
-              class="label clickable-label label-link"
-              data-label="${encodeURIComponent(label)}"
-            >${label}</span>
-          `).join("")}
+          ${labels
+            .slice(0, 6)
+            .map(
+              label => `
+                <span
+                  class="label clickable-label label-link"
+                  data-label="${encodeURIComponent(label)}"
+                >${label}</span>
+              `
+            )
+            .join("")}
         </div>
       </div>
     </a>
   `;
 }
 
-function updatePageBadge(){
-  if(currentSearch){
+function updatePageBadge() {
+  if (currentSearch) {
     pageBadge.style.display = "inline-flex";
     pageBadge.textContent = `Search: ${currentSearch}`;
     return;
   }
 
-  if(currentLabel){
+  if (currentLabel) {
     pageBadge.style.display = "inline-flex";
     pageBadge.textContent = `Label: ${currentLabel} • Page ${currentPage}`;
     return;
   }
 
-  if(currentPage > 1){
+  if (currentPage > 1) {
     pageBadge.style.display = "inline-flex";
     pageBadge.textContent = `Page ${currentPage}`;
-  }else{
+  } else {
     pageBadge.style.display = "none";
     pageBadge.textContent = "";
   }
 }
 
-function updateNavState(){
-  if(currentSearch){
+function updateNavState() {
+  if (currentSearch) {
     prevBtn.classList.add("disabled");
     nextBtn.classList.add("disabled");
     prevBtn.setAttribute("aria-disabled", "true");
@@ -487,19 +403,19 @@ function updateNavState(){
     return;
   }
 
-  if(currentLabel){
-    if(currentPage <= 1){
+  if (currentLabel) {
+    if (currentPage <= 1) {
       prevBtn.classList.add("disabled");
       prevBtn.setAttribute("aria-disabled", "true");
-    }else{
+    } else {
       prevBtn.classList.remove("disabled");
       prevBtn.removeAttribute("aria-disabled");
     }
 
-    if(currentPage >= currentLabelTotalPages){
+    if (currentPage >= currentLabelTotalPages) {
       nextBtn.classList.add("disabled");
       nextBtn.setAttribute("aria-disabled", "true");
-    }else{
+    } else {
       nextBtn.classList.remove("disabled");
       nextBtn.removeAttribute("aria-disabled");
     }
@@ -507,27 +423,27 @@ function updateNavState(){
     return;
   }
 
-  if(currentPage <= 1){
+  if (currentPage <= 1) {
     prevBtn.classList.add("disabled");
     prevBtn.setAttribute("aria-disabled", "true");
-  }else{
+  } else {
     prevBtn.classList.remove("disabled");
     prevBtn.removeAttribute("aria-disabled");
   }
 
   const atKnownLastPage =
-    noMoreFiles && (currentPage * POSTS_PER_PAGE >= ALL_POSTS.length);
+    noMoreFiles && currentPage * POSTS_PER_PAGE >= ALL_POSTS.length;
 
-  if(atKnownLastPage){
+  if (atKnownLastPage) {
     nextBtn.classList.add("disabled");
     nextBtn.setAttribute("aria-disabled", "true");
-  }else{
+  } else {
     nextBtn.classList.remove("disabled");
     nextBtn.removeAttribute("aria-disabled");
   }
 }
 
-function showHome(){
+function showHome() {
   setPageTitleVisible(!currentSearch && !currentLabel);
   setBrandTitleVisible(true);
   setLanguageCloudVisible(!currentSearch);
@@ -537,23 +453,23 @@ function showHome(){
   updatePageBadge();
 }
 
-async function loadJsonFile(index){
-  if(index > MAX_JSON_FILES) {
+async function loadJsonFile(index) {
+  if (index > MAX_JSON_FILES) {
     noMoreFiles = true;
     return false;
   }
 
-  if(loadedFileIndexes.has(index)) return true;
+  if (loadedFileIndexes.has(index)) return true;
 
-  if(loadingFilePromises.has(index)) return loadingFilePromises.get(index);
+  if (loadingFilePromises.has(index)) return loadingFilePromises.get(index);
 
   const promise = (async () => {
-    try{
+    try {
       const file = getJsonFile(index);
       const res = await fetch(file, { cache: "force-cache" });
 
-      if(!res.ok){
-        if(res.status === 404){
+      if (!res.ok) {
+        if (res.status === 404) {
           noMoreFiles = true;
         }
         return false;
@@ -566,10 +482,10 @@ async function loadJsonFile(index){
       loadedFileIndexes.add(index);
 
       return true;
-    }catch(err){
+    } catch (err) {
       console.error("Failed to load:", getJsonFile(index), err);
       return false;
-    }finally{
+    } finally {
       loadingFilePromises.delete(index);
     }
   })();
@@ -578,45 +494,44 @@ async function loadJsonFile(index){
   return promise;
 }
 
-async function loadNextJsonFile(){
-  if(noMoreFiles) return false;
+async function loadNextJsonFile() {
+  if (noMoreFiles) return false;
 
   const index = nextJsonIndex;
   const ok = await loadJsonFile(index);
 
-  if(ok){
+  if (ok) {
     nextJsonIndex += 1;
   }
 
   return ok;
 }
 
-async function ensurePostsForPage(page){
+async function ensurePostsForPage(page) {
   const neededCount = page * POSTS_PER_PAGE;
 
-  while(ALL_POSTS.length < neededCount && !noMoreFiles){
+  while (ALL_POSTS.length < neededCount && !noMoreFiles) {
     const ok = await loadNextJsonFile();
-    if(!ok) break;
+    if (!ok) break;
   }
 }
 
-async function ensureAllPostsLoaded(){
-  while(!noMoreFiles && nextJsonIndex <= MAX_JSON_FILES){
+async function ensureAllPostsLoaded() {
+  while (!noMoreFiles && nextJsonIndex <= MAX_JSON_FILES) {
     const ok = await loadNextJsonFile();
-    if(!ok) break;
+    if (!ok) break;
   }
 }
 
-function matchesSearch(post, query){
+function matchesSearch(post, query) {
   const title = (post.title?.$t || "").toLowerCase();
   const labels = getLabels(post).join(" ").toLowerCase();
   const content = (post.content?.$t || "").toLowerCase();
   return title.includes(query) || labels.includes(query) || content.includes(query);
 }
 
-async function renderFeaturedMovies(){
-
-  if(!featuredPostsEl || !featuredSection) return;
+async function renderFeaturedMovies() {
+  if (!featuredPostsEl || !featuredSection) return;
 
   await ensureAllPostsLoaded();
 
@@ -627,16 +542,16 @@ async function renderFeaturedMovies(){
 
   const featured = trendingPosts.slice(0, 12);
 
-  if(featured.length){
+  if (featured.length) {
     featuredPostsEl.innerHTML = featured.map(post => createCard(post)).join("");
-  }else{
+  } else {
     featuredPostsEl.innerHTML = `<div class="loading">No featured movies found</div>`;
   }
 
   updateFeaturedVisibility();
 }
 
-async function renderPage(page, addHistory = true){
+async function renderPage(page, addHistory = true) {
   scrollToTopNow();
   closeSidebar();
 
@@ -678,10 +593,10 @@ async function renderPage(page, addHistory = true){
 
   pagination.style.display = "flex";
 
-  if(addHistory){
-    if(currentPage === 1){
+  if (addHistory) {
+    if (currentPage === 1) {
       history.pushState({ page: 1 }, "", `/`);
-    }else{
+    } else {
       history.pushState({ page: currentPage }, "", `?page=${currentPage}`);
     }
   }
@@ -690,21 +605,25 @@ async function renderPage(page, addHistory = true){
   updatePageBadge();
   updateFeaturedVisibility();
 
-  if(currentPage === 1 && !currentSearch && !currentLabel){
+  if (currentPage === 1 && !currentSearch && !currentLabel) {
     await renderFeaturedMovies();
   }
 
   scrollToTopNow();
 }
 
-async function renderSearchResults(query, addHistory = true){
+async function renderSearchResults(query, addHistory = true) {
   const q = query.trim().toLowerCase();
 
-  if(!q){
+  if (!q) {
     searchStatus.style.display = "none";
     currentSearch = "";
-    if(addHistory){
-      history.pushState({ page: currentPage }, "", currentPage === 1 ? `/` : `?page=${currentPage}`);
+    if (addHistory) {
+      history.pushState(
+        { page: currentPage },
+        "",
+        currentPage === 1 ? `/` : `?page=${currentPage}`
+      );
     }
     await renderPage(currentPage, false);
     updateFeaturedVisibility();
@@ -733,10 +652,12 @@ async function renderSearchResults(query, addHistory = true){
 
   const results = ALL_POSTS.filter(post => matchesSearch(post, q));
 
-  if(results.length){
+  if (results.length) {
     postsEl.innerHTML = results.map(post => createCard(post)).join("");
-    searchStatus.textContent = `Showing ${results.length} result${results.length === 1 ? "" : "s"} for “${currentSearch}”`;
-  }else{
+    searchStatus.textContent = `Showing ${results.length} result${
+      results.length === 1 ? "" : "s"
+    } for “${currentSearch}”`;
+  } else {
     postsEl.innerHTML = `<div class="loading">No results found for “${currentSearch}”</div>`;
     searchStatus.textContent = `No results found for “${currentSearch}”`;
   }
@@ -749,15 +670,19 @@ async function renderSearchResults(query, addHistory = true){
   pageBadge.style.display = "inline-flex";
   pageBadge.textContent = `Search: ${currentSearch}`;
 
-  if(addHistory){
-    history.pushState({ search: currentSearch }, "", `?search=${encodeURIComponent(currentSearch)}`);
+  if (addHistory) {
+    history.pushState(
+      { search: currentSearch },
+      "",
+      `?search=${encodeURIComponent(currentSearch)}`
+    );
   }
 
   updateFeaturedVisibility();
   scrollToTopNow();
 }
 
-async function renderLabelPosts(label, page = 1, addHistory = true){
+async function renderLabelPosts(label, page = 1, addHistory = true) {
   scrollToTopNow();
   closeSidebar();
 
@@ -787,17 +712,22 @@ async function renderLabelPosts(label, page = 1, addHistory = true){
     return labels.includes(targetLabel);
   });
 
-  currentLabelTotalPages = Math.max(1, Math.ceil(results.length / POSTS_PER_PAGE));
+  currentLabelTotalPages = Math.max(
+    1,
+    Math.ceil(results.length / POSTS_PER_PAGE)
+  );
   currentPage = Math.min(Math.max(1, page), currentLabelTotalPages);
 
   const start = (currentPage - 1) * POSTS_PER_PAGE;
   const end = start + POSTS_PER_PAGE;
   const pageItems = results.slice(start, end);
 
-  if(pageItems.length){
+  if (pageItems.length) {
     postsEl.innerHTML = pageItems.map(post => createCard(post)).join("");
-    searchStatus.textContent = `${results.length} post${results.length === 1 ? "" : "s"} found in "${currentLabel}"`;
-  }else{
+    searchStatus.textContent = `${results.length} post${
+      results.length === 1 ? "" : "s"
+    } found in "${currentLabel}"`;
+  } else {
     postsEl.innerHTML = `<div class="loading">No posts found in "${currentLabel}"</div>`;
     searchStatus.textContent = `No posts found in "${currentLabel}"`;
   }
@@ -806,7 +736,8 @@ async function renderLabelPosts(label, page = 1, addHistory = true){
   pagination.style.display = "flex";
 
   const prevPage = currentPage > 1 ? currentPage - 1 : 1;
-  const nextPage = currentPage < currentLabelTotalPages ? currentPage + 1 : currentLabelTotalPages;
+  const nextPage =
+    currentPage < currentLabelTotalPages ? currentPage + 1 : currentLabelTotalPages;
 
   prevBtn.href =
     prevPage === 1
@@ -815,7 +746,7 @@ async function renderLabelPosts(label, page = 1, addHistory = true){
 
   nextBtn.href = `?label=${encodeURIComponent(currentLabel)}&page=${nextPage}`;
 
-  if(addHistory){
+  if (addHistory) {
     history.pushState(
       { label: currentLabel, page: currentPage },
       "",
@@ -831,15 +762,18 @@ async function renderLabelPosts(label, page = 1, addHistory = true){
   scrollToTopNow();
 }
 
-function handleSearchInput(){
+function handleSearchInput() {
   const value = searchInput.value;
-  if(value.trim()){
+  if (value.trim()) {
     searchClear.classList.add("show");
-  }else{
+  } else {
     searchClear.classList.remove("show");
   }
 
-  searchBtn.classList.toggle("active", !!value.trim() || document.activeElement === searchInput);
+  searchBtn.classList.toggle(
+    "active",
+    !!value.trim() || document.activeElement === searchInput
+  );
 
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => {
@@ -847,13 +781,13 @@ function handleSearchInput(){
   }, 300);
 }
 
-function initExtras(){
+function initExtras() {
   readDomains();
   loadPopup();
   setPoster();
 }
 
-async function initFromURL(){
+async function initFromURL() {
   scrollToTopNow();
   closeSidebar();
 
@@ -864,21 +798,16 @@ async function initFromURL(){
   const search = params.get("search") || "";
   const label = params.get("label") || "";
 
-  let pathSlug =
-    window.location.pathname
-      .replace(/^\/+/,"")
-      .replace(/\/+$/,"");
+  let pathSlug = window.location.pathname
+    .replace(/^\/+/, "")
+    .replace(/\/+$/, "");
 
   /* =========================
      BLOGGER OLD URL -> CLEAN SLUG
   ========================= */
 
-  if(/^\d{4}\/\d{2}\/.+\.html$/i.test(pathSlug)){
-    const cleanSlug =
-      pathSlug
-        .split("/")
-        .pop()
-        .replace(/\.html$/i, "");
+  if (/^\d{4}\/\d{2}\/.+\.html$/i.test(pathSlug)) {
+    const cleanSlug = pathSlug.split("/").pop().replace(/\.html$/i, "");
 
     window.location.replace(`/${cleanSlug}`);
     return;
@@ -887,14 +816,14 @@ async function initFromURL(){
   currentPage = Number.isFinite(page) && page > 0 ? page : 1;
   pageNumEl.innerText = currentPage;
 
-  if(label){
+  if (label) {
     await renderLabelPosts(label, currentPage, false);
-  }else if(search){
+  } else if (search) {
     searchInput.value = search;
     searchClear.classList.add("show");
     searchBtn.classList.add("active");
     await renderSearchResults(search, false);
-  }else{
+  } else {
     await renderPage(currentPage, false);
     updateFeaturedVisibility();
   }
@@ -902,40 +831,40 @@ async function initFromURL(){
   scrollToTopNow();
 }
 
-prevBtn.addEventListener("click", (e) => {
+prevBtn.addEventListener("click", e => {
   e.preventDefault();
   closeSidebar();
 
-  if(prevBtn.classList.contains("disabled")) return;
+  if (prevBtn.classList.contains("disabled")) return;
 
-  if(currentSearch){
+  if (currentSearch) {
     return;
   }
 
-  if(currentLabel){
-    if(currentPage > 1){
+  if (currentLabel) {
+    if (currentPage > 1) {
       renderLabelPosts(currentLabel, currentPage - 1, true);
     }
     return;
   }
 
-  if(currentPage > 1){
+  if (currentPage > 1) {
     renderPage(currentPage - 1, true);
   }
 });
 
-nextBtn.addEventListener("click", (e) => {
+nextBtn.addEventListener("click", e => {
   e.preventDefault();
   closeSidebar();
 
-  if(nextBtn.classList.contains("disabled")) return;
+  if (nextBtn.classList.contains("disabled")) return;
 
-  if(currentSearch){
+  if (currentSearch) {
     return;
   }
 
-  if(currentLabel){
-    if(currentPage < currentLabelTotalPages){
+  if (currentLabel) {
+    if (currentPage < currentLabelTotalPages) {
       renderLabelPosts(currentLabel, currentPage + 1, true);
     }
     return;
@@ -955,7 +884,7 @@ searchInput.addEventListener("focus", () => {
 });
 
 searchInput.addEventListener("blur", () => {
-  if(!searchInput.value.trim()){
+  if (!searchInput.value.trim()) {
     searchBtn.classList.remove("active");
   }
 });
@@ -964,14 +893,14 @@ menuBtn.addEventListener("click", toggleSidebar);
 sidebarClose.addEventListener("click", closeSidebar);
 sidebarOverlay.addEventListener("click", closeSidebar);
 
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Escape") closeSidebar();
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSidebar();
 });
 
 searchInput.addEventListener("input", handleSearchInput);
 
-searchInput.addEventListener("keydown", (e) => {
-  if(e.key === "Enter"){
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
     e.preventDefault();
     clearTimeout(searchTimer);
     renderSearchResults(searchInput.value, true);
@@ -989,10 +918,7 @@ searchClear.addEventListener("click", () => {
 });
 
 window.addEventListener("popstate", () => {
-  if(
-    popup &&
-    popup.classList.contains("active")
-  ){
+  if (popup && popup.classList.contains("active")) {
     closePopup();
   }
 
@@ -1004,59 +930,42 @@ window.addEventListener("popstate", () => {
 ========================= */
 
 document.addEventListener("click", e => {
+  const labelLink = e.target.closest(".label-link");
 
-  const labelLink =
-    e.target.closest(".label-link");
-
-  if(labelLink){
+  if (labelLink) {
     e.preventDefault();
     e.stopPropagation();
 
-    const label =
-      decodeURIComponent(labelLink.dataset.label || "");
+    const label = decodeURIComponent(labelLink.dataset.label || "");
 
     renderLabelPosts(label, 1, true);
     return;
   }
 
-  const downloadBtn =
-    e.target.closest(".button-link");
+  const downloadBtn = e.target.closest(".button-link");
 
-  if(downloadBtn){
-
+  if (downloadBtn) {
     e.preventDefault();
-
     handleDownload(downloadBtn);
-
     return;
   }
 
-  const overlay =
-    e.target.closest(".video-overlay");
+  const overlay = e.target.closest(".video-overlay");
 
-  if(overlay){
-
+  if (overlay) {
     e.preventDefault();
-
     playVideo(overlay);
-
     return;
   }
 
-  const galleryImg =
-    e.target.closest(
-      ".tmdb-extra-images img"
-    );
+  const galleryImg = e.target.closest(".tmdb-extra-images img");
 
-  if(galleryImg){
-
+  if (galleryImg) {
     refreshGallery();
 
-    const index =
-      currentImages.indexOf(galleryImg);
+    const index = currentImages.indexOf(galleryImg);
 
-    if(index !== -1){
-
+    if (index !== -1) {
       setTimeout(() => {
         openPopup(index);
       }, 100);
@@ -1065,42 +974,24 @@ document.addEventListener("click", e => {
     return;
   }
 
-  if(
-    e.target.closest(".tmdb-close")
-  ){
-
+  if (e.target.closest(".tmdb-close")) {
     closePopup();
-
     history.back();
-
     return;
   }
 
-  if(
-    e.target.closest(".tmdb-next")
-  ){
-
+  if (e.target.closest(".tmdb-next")) {
     nextImage();
-
     return;
   }
 
-  if(
-    e.target.closest(".tmdb-prev")
-  ){
-
+  if (e.target.closest(".tmdb-prev")) {
     prevImage();
-
     return;
   }
 
-  if(
-    popup &&
-    e.target === popup
-  ){
-
+  if (popup && e.target === popup) {
     closePopup();
-
     history.back();
   }
 });
@@ -1110,14 +1001,9 @@ document.addEventListener("click", e => {
 ========================= */
 
 document.addEventListener("keydown", e => {
+  if (!popup || !popup.classList.contains("active")) return;
 
-  if(
-    !popup ||
-    !popup.classList.contains("active")
-  ) return;
-
-  switch(e.key){
-
+  switch (e.key) {
     case "ArrowRight":
       nextImage();
       break;
@@ -1143,61 +1029,43 @@ let touchEndX = 0;
 document.addEventListener(
   "touchstart",
   e => {
+    if (!popup || !popup.classList.contains("active")) return;
 
-    if(
-      !popup ||
-      !popup.classList.contains("active")
-    ) return;
-
-    touchStartX =
-      e.changedTouches[0].screenX;
+    touchStartX = e.changedTouches[0].screenX;
   },
-  { passive:true }
+  { passive: true }
 );
 
 document.addEventListener(
   "touchend",
   e => {
+    if (!popup || !popup.classList.contains("active")) return;
 
-    if(
-      !popup ||
-      !popup.classList.contains("active")
-    ) return;
+    touchEndX = e.changedTouches[0].screenX;
 
-    touchEndX =
-      e.changedTouches[0].screenX;
-
-    if(
-      touchStartX - touchEndX > 50
-    ){
+    if (touchStartX - touchEndX > 50) {
       nextImage();
     }
 
-    if(
-      touchEndX - touchStartX > 50
-    ){
+    if (touchEndX - touchStartX > 50) {
       prevImage();
     }
   },
-  { passive:true }
+  { passive: true }
 );
 
 /* =========================
    OBSERVER
 ========================= */
 
-const observer =
-  new MutationObserver(() => {
-    setPoster();
-  });
+const observer = new MutationObserver(() => {
+  setPoster();
+});
 
-observer.observe(
-  document.body,
-  {
-    childList:true,
-    subtree:true
-  }
-);
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
 
 initFromURL();
 
