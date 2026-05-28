@@ -497,13 +497,6 @@ body.sidebar-open{
     grid-template-columns:repeat(3,1fr);
     gap:10px;
   }
-}
-
-@media(max-width:768px){
-  .grid{
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-  }
 
   .hero h2{
     font-size:24px;
@@ -516,7 +509,7 @@ body.sidebar-open{
 
 @media(max-width:480px){
   .grid{
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:10px;
   }
 
