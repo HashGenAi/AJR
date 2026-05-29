@@ -4,7 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="canonical" href="https://www.jiorockers.online/" />
+
+
+${pathname === "/" &&
+ !urlObj.searchParams.has("search") &&
+ !urlObj.searchParams.has("label")
+  ? '<link rel="canonical" href="https://www.jiorockers.online/" />'
+  : ""}
+
+
+${urlObj.searchParams.has("search") ||
+  urlObj.searchParams.has("label")
+  ? '<meta name="robots" content="noindex,follow">'
+  : ""}
+
+
 
   <title>Jio Rockers (2026) Download Movies in Telugu Tamil Kannada Malayalam Hindi</title>
 
