@@ -1219,36 +1219,3 @@ body.sidebar-open{
     opacity:0 !important;
   }
 }
-
-.telegram-float{
-  position:fixed;
-  width:60px;
-  height:60px;
-  bottom:50%;
-  margin-bottom:-300px;
-  right:20px;
-  background-color:#2AABEE;
-  color:#FFF !important;
-  border-radius:50px;
-  text-align:center;
-  font-size:44px;
-  line-height:60px;
-  box-shadow:2px 2px 3px #999;
-  z-index:100;
-  text-decoration:none;
-  display:block;
-}
-
-.telegram-float:before{
-  content:"Join Telegram";
-  position:absolute;
-  left:-120px;
-  top:10px;
-  font-size:15px;
-  background:#2AABEE;
-  padding:5px 8px;
-  border-radius:10px;
-  color:#FFF;
-  white-space:nowrap;
-}
-
