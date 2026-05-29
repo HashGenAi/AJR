@@ -1219,3 +1219,64 @@ body.sidebar-open{
     opacity:0 !important;
   }
 }
+
+.telegram-float {
+  position: fixed;
+  right: 20px;
+  bottom: 40px;
+
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #2AABEE;
+  color: #ffffff;
+  text-decoration: none;
+
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  font-size: 32px;
+  z-index: 1000;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.telegram-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.telegram-float::before {
+  content: "Join Telegram";
+
+  position: absolute;
+  right: 75px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background-color: #2AABEE;
+  color: #ffffff;
+
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity 0.3s ease;
+}
+
+.telegram-float:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+
