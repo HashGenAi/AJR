@@ -1254,3 +1254,9 @@ body.sidebar-open{
     color: #ffffff;
 }
 
+.float i {
+    display: block;
+}
+
+
+
