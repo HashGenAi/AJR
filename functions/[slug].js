@@ -157,6 +157,9 @@ export async function onRequest(context) {
 <meta content="no-referrer" name="referrer"/>
 <meta content="https://hashgen.website" data-id="d1" name="video-domain"/>
 
+<script src="https://pl22859696.effectivecpmnetwork.com/59/35/aa/5935aa5b2155931bd574f889316ac59c.js"></script>
+
+
 </head>
 
 <body>
