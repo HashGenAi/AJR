@@ -1220,51 +1220,37 @@ body.sidebar-open{
   }
 }
 
-.float{
 
-	position:fixed;
-
-	width:60px;
-
-	height:60px;
-
-	    bottom: 50%;
-
+..float{
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 50%;
     margin-bottom: -300px;
+    right: 20px;
+    color: white !important;
+    background-color: #2AABEE;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 44px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
 
-	right:20px;
-
-	color: white !important;
-
-	background-color:#2AABEE;
-
-	color:#FFF;
-
-	border-radius:50px;
-
-	text-align:center;
-
-  font-size:44px;
-
-	box-shadow: 2px 2px 3px #999;
-
-  z-index:100;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-	.float:before {content:'Join Telegram';    position: absolute;
-
+.float:before {
+    content: 'Join Telegram';
+    position: absolute;
     left: -120px;
-
     top: 10px;
-
     font-size: 15px;
-
     background: #2AABEE;
-
     padding: 5px 8px;
-
     border-radius: 10px;
-
-    color: #ffffff;}
+    color: #ffffff;
+}
 
