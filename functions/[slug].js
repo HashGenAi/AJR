@@ -157,9 +157,6 @@ export async function onRequest(context) {
 <meta content="no-referrer" name="referrer"/>
 <meta content="https://hashgen.website" data-id="d1" name="video-domain"/>
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
 </head>
 
 <body>
@@ -417,10 +414,11 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
-<a class="float" href="https://t.me/JioRockerssi" target="_blank">
-  <i class="fab fa-telegram"></i>
+<a class="float" href="https://t.me/JioRockerssi" target="_blank" aria-label="Telegram">
+    <svg class="tg-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="#ffffff" d="M9.99 15.96 9.58 21.48c.59 0 .85-.26 1.16-.56l2.79-2.66 5.79 4.24c1.06.59 1.82.28 2.09-.98L24 3.76c.34-1.56-.56-2.17-1.6-1.78L1.66 9.05C.14 9.64.16 10.49 1.39 10.87l5.6 1.75L20.99 4.55c.78-.49 1.5-.22.91.31L9.99 15.96z"/>
+    </svg>
 </a>
-
 
 </body>
 </html>
