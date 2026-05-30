@@ -1220,6 +1220,7 @@ body.sidebar-open{
   }
 }
 
+
 .float{
     position:fixed;
     width:60px;
@@ -1227,14 +1228,14 @@ body.sidebar-open{
     bottom:50%;
     margin-bottom:-300px;
     right:20px;
-    background-color:#229ED9;
+    background-color:#2AABEE;
     border-radius:50px;
     text-align:center;
     box-shadow:2px 2px 3px #999;
     z-index:100;
 }
 
-.float img{
+.tg-icon{
     width:32px;
     height:32px;
     position:absolute;
@@ -1249,9 +1250,12 @@ body.sidebar-open{
     left:-120px;
     top:10px;
     font-size:15px;
-    background:#229ED9;
+    background:#2AABEE;
     padding:5px 8px;
     border-radius:10px;
     color:#ffffff;
 }
+
+
+
 
