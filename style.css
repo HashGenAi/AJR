@@ -1221,7 +1221,7 @@ body.sidebar-open{
 }
 
 
-..float{
+.float{
     position: fixed;
     width: 60px;
     height: 60px;
