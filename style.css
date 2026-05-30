@@ -1254,8 +1254,8 @@ body.sidebar-open{
 }
 
 .float i{
-	position: relative;
-	top: 2px;
+	display:inline-block;
+	transform: translateY(2px);
 }
 
 .float:before {
