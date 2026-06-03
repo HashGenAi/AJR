@@ -10,6 +10,11 @@ html{
   overscroll-behavior-y:none;
 }
 
+.red-link {
+  color: red;
+  text-decoration: none;
+}
+
 body{
   background:
     radial-gradient(circle at top,#1c1c1c 0%,#0f0f0f 45%),
