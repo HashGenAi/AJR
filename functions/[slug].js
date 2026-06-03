@@ -20,6 +20,18 @@ export async function onRequest(context) {
     return context.next();
   }
 
+
+// Let /dmca page load normally
+  if (pathname === "/dmca" || pathname === "/dmca/") {
+    return context.next();
+  }
+
+
+// Let /contact page load normally
+  if (pathname === "/contact" || pathname === "/contact/") {
+    return context.next();
+  }
+
   function slugify(text) {
     return String(text || "")
       .toLowerCase()
@@ -157,9 +169,6 @@ export async function onRequest(context) {
 <meta content="no-referrer" name="referrer"/>
 <meta content="https://hashgen.website" data-id="d1" name="video-domain"/>
 
-<script src="https://pl22859696.effectivecpmnetwork.com/59/35/aa/5935aa5b2155931bd574f889316ac59c.js"></script>
-
-
 </head>
 
 <body>
@@ -201,6 +210,19 @@ export async function onRequest(context) {
           <span class="icon">☰</span>
           <span>Related Posts</span>
         </a>
+
+
+<a class="sidebar-link" href="/dmca">
+        <span class="icon">©️</span>
+        <span>DMCA</span>
+      </a>
+
+
+<a class="sidebar-link" href="/contact">
+        <span class="icon">📞</span>
+        <span>Contact Us</span>
+      </a>
+
       </div>
 
       <div class="sidebar-section">
