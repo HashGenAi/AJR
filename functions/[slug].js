@@ -161,6 +161,10 @@ export async function onRequest(context) {
   gtag('config', 'G-BWP4HMDWY8');
 </script>
 
+
+<script src="https://pl22859696.effectivecpmnetwork.com/59/35/aa/5935aa5b2155931bd574f889316ac59c.js"></script>
+
+
 <link rel="stylesheet" href="/style.css">
 <script src="/script.js" defer></script>
 
