@@ -18,7 +18,7 @@
   gtag('config', 'G-BWP4HMDWY8');
 </script>
 
-  
+
 <title>Download</title>
 
 <style>
@@ -451,6 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+
 <script>
 
 // Countdown seconds
@@ -483,6 +484,9 @@ var finalLink = targetPath
   ? (domain ? domain + targetPath : targetPath)
   : null;
 
+// Worker URL
+var workerUrl = "https://messyextract.salim1monira.workers.dev/?url=";
+
 // Check target
 if (!targetPath) {
 
@@ -506,9 +510,51 @@ if (!targetPath) {
 
       downloadBtn.classList.add("active");
 
-      // Click event
-      downloadBtn.addEventListener("click", function(){
-        window.location.href = finalLink;
+      downloadBtn.addEventListener("click", async function(e){
+
+        e.preventDefault();
+
+        // Only MessyCloud uses Worker
+        if (domainKey === "d6") {
+
+          try {
+
+            downloadBtn.innerHTML = "Getting Link...";
+            downloadBtn.style.pointerEvents = "none";
+
+            const response = await fetch(
+              workerUrl + encodeURIComponent(finalLink)
+            );
+
+            const data = await response.json();
+
+            if (data.success && data.downloadUrl) {
+
+              window.location.href = data.downloadUrl;
+              return;
+
+            }
+
+            alert(data.message || "Download link not found.");
+
+          } catch (err) {
+
+            alert("Failed to get download link.");
+
+          } finally {
+
+            downloadBtn.innerHTML = "Download Now";
+            downloadBtn.style.pointerEvents = "auto";
+
+          }
+
+        } else {
+
+          // All other domains work normally
+          window.location.href = finalLink;
+
+        }
+
       });
 
     }
@@ -518,6 +564,7 @@ if (!targetPath) {
 }
 
 </script>
+
 
 
 <a class="float" href="https://t.me/JioRockerssi" target="_blank" aria-label="Telegram">
