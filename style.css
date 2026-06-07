@@ -1266,6 +1266,20 @@ body.sidebar-open{
 }
 
 
+
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:auto;
+  overflow-anchor:none;
+  overscroll-behavior-y:none;
+}
+
 /* WRAPPER */
 .vp1-video-wrapper {
   width: 100%;
@@ -1273,7 +1287,7 @@ body.sidebar-open{
   padding: 8px;
 }
 
-/* PLAYER BOX */
+/* PLAYER BOX (FIXED CENTER ALIGNMENT) */
 .vp1-player-box {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1281,6 +1295,10 @@ body.sidebar-open{
   border-radius: 12px;
   overflow: hidden;
   position: relative;
+
+  display: flex;
+  align-items: center;     /* ✅ vertical center */
+  justify-content: center; /* ✅ horizontal center */
 }
 
 /* VIDEO */
@@ -1292,19 +1310,18 @@ video {
   background: #000;
 }
 
-
+/* POSTER IMAGE (FIXED CENTER CROPPING) */
 .vp1-poster-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center; /* ✅ THIS FIXES IT */
+  object-position: center center !important; /* ✅ KEY FIX */
   z-index: 2;
   cursor: pointer;
+  transform: translateZ(0); /* smooth rendering */
 }
-
-
 
 /* PLAY BUTTON (WHITE CIRCLE + BLACK ICON) */
 .vp1-play-btn {
@@ -1335,10 +1352,10 @@ video {
 
 /* MOBILE */
 @media (max-width: 600px) {
-  .vp1-video-wrapper { padding: 5px; }
+  .vp1-video-wrapper {
+    padding: 5px;
+  }
 }
-
-
 
 
 
