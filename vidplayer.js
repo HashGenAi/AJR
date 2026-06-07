@@ -11,7 +11,7 @@ var domains = {
   d6: "https://www.messycloud.ink"
 };
 
-var workerUrl = "https://messyextract.salim1monira.workers.dev/?url=";
+var workerUrl = "https://mjx.jiorockers099.workers.dev/?url=";
 
 let finalLink = null;
 let domainKey = null;
