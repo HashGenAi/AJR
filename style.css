@@ -15,7 +15,8 @@ html{
   text-decoration: none;
 }
 
-.video-container .vp1-video-wrapper {
+.video-container,
+.vp1-video-wrapper {
     display: none !important;
 }
 
