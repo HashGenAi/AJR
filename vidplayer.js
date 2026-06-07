@@ -18,12 +18,12 @@ let domainKey = null;
 let initialized = false;
 
 /* =========================
-   SET POSTER (FIXED)
+   FIXED POSTER (ONLY CHANGE)
 ========================= */
 (function setPoster() {
 
   const img =
-    document.querySelector(".post-thumbnail img");
+    document.querySelector("#detailContent img");  // ✅ FIXED LINE ONLY
 
   if (img && img.src) {
     posterImg.src = img.src;
@@ -87,9 +87,7 @@ async function startVideo() {
   } catch (e) {}
 }
 
-/* =========================
-   EVENTS
-========================= */
+/* EVENTS */
 function triggerPlay() {
   startVideo();
 }
