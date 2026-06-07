@@ -1292,16 +1292,19 @@ video {
   background: #000;
 }
 
-/* POSTER IMAGE (NEW FIX) */
+
 .vp1-poster-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center; /* ✅ THIS FIXES IT */
   z-index: 2;
   cursor: pointer;
 }
+
+
 
 /* PLAY BUTTON (WHITE CIRCLE + BLACK ICON) */
 .vp1-play-btn {
