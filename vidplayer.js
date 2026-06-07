@@ -1,5 +1,5 @@
 var player = document.getElementById("vp1-videoPlayer");
-var poster = document.getElementById("vp1-poster");
+var posterImg = document.getElementById("vp1-posterImg");
 var playBtn = document.getElementById("vp1-playBtn");
 
 var domains = {
@@ -17,19 +17,31 @@ let finalLink = null;
 let domainKey = null;
 let initialized = false;
 
-/* SET THUMBNAIL */
+/* =========================
+   SET POSTER (FIXED)
+========================= */
 (function setPoster() {
-  const img = document.querySelector(".post-thumbnail img");
+
+  const img =
+    document.querySelector(".post-thumbnail img");
+
   if (img && img.src) {
-    poster.style.backgroundImage = `url(${img.src})`;
+    posterImg.src = img.src;
   } else {
-    poster.style.background = "#000";
+    posterImg.src =
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e";
   }
+
 })();
 
-/* PREPARE LINK */
+/* =========================
+   PREPARE LINK
+========================= */
 (function prepare() {
-  var btn = document.querySelector(".button-link[data-url]");
+
+  var btn =
+    document.querySelector(".button-link[data-url]");
+
   if (!btn) return;
 
   var parts = btn.dataset.url.split("|");
@@ -42,15 +54,18 @@ let initialized = false;
   if (!domain || !path) return;
 
   finalLink = domain + path;
+
 })();
 
-/* LOAD ONLY ON PLAY */
+/* =========================
+   START VIDEO
+========================= */
 async function startVideo() {
 
   if (initialized) return;
   initialized = true;
 
-  poster.style.display = "none";
+  posterImg.style.display = "none";
   playBtn.style.display = "none";
 
   if (!finalLink) return;
@@ -72,11 +87,13 @@ async function startVideo() {
   } catch (e) {}
 }
 
-/* EVENTS */
+/* =========================
+   EVENTS
+========================= */
 function triggerPlay() {
   startVideo();
 }
 
-poster.addEventListener("click", triggerPlay);
+posterImg.addEventListener("click", triggerPlay);
 playBtn.addEventListener("click", triggerPlay);
 player.addEventListener("play", startVideo, { once: true });
