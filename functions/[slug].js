@@ -161,9 +161,10 @@ export async function onRequest(context) {
   gtag('config', 'G-BWP4HMDWY8');
 </script>
 
-
 <link rel="stylesheet" href="/style.css">
 <script src="/script.js" defer></script>
+
+<script src="/vidplayer.js" defer></script>
 
 <script src="/anotherjs.js" defer></script>
 
